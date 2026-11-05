@@ -18,6 +18,13 @@ paths:
       summary: List all tasks
       tags:
         - Tasks
+      parameters:
+        - in: query
+          name: completed
+          schema:
+            type: boolean
+          required: false
+          description: Filter tasks to return only completed (true) or incomplete (false) tasks.
       responses:
         '200':
           description: OK
@@ -27,6 +34,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request due to invalid query parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                example:
+                  errors:
+                    - type: field
+                      value: invalid
+                      msg: The completed parameter must be a boolean (true or false)
+                      path: completed
+                      location: query
     post:
       summary: Create a new task
       tags:
